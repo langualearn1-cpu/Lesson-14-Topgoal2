@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Practice Worksheet: How Many & How Long - Glory English Academy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;900&family=Kalam:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #fffbeb 0%, #fef3c7 30%, #e0f2fe 100%);
+      min-height: 100vh;
+      color: #1e293b;
+      touch-action: manipulation;
+    }
+
+    .en-font {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    .hand-font {
+      font-family: 'Kalam', cursive;
+    }
+
+    /* Main Poster Canvas */
+    .worksheet-poster {
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25), 0 0 0 10px #fefce8;
+    }
+
+    /* Ribbon Banner matching image header */
+    .ribbon-banner {
+      background: linear-gradient(135deg, #fef08a 0%, #fed7aa 50%, #fbcfe8 100%);
+      border: 3.5px dashed #f43f5e;
+      border-radius: 28px;
+      box-shadow: 0 8px 20px -4px rgba(244, 63, 94, 0.25);
+    }
+
+    /* Section 1 Card */
+    .ex1-container {
+      background: #fbf5eb;
+      border: 3px solid #f59e0b;
+      border-radius: 28px;
+    }
+
+    /* Word Pill (Drag & Drop) */
+    .word-pill {
+      cursor: grab;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .word-pill:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+    .word-pill.selected-pill {
+      box-shadow: 0 0 0 4px #fbbf24, 0 10px 20px -3px rgba(245, 158, 11, 0.4);
+      transform: translateY(-3px) scale(1.05);
+      animation: pulseSelection 1.5s infinite;
+    }
+    @keyframes pulseSelection {
+      0%, 100% { box-shadow: 0 0 0 4px #fbbf24; }
+      50% { box-shadow: 0 0 0 8px #f59e0b; }
+    }
+
+    /* Drop Slots for Exercise 1 */
+    .drop-slot {
+      min-width: 130px;
+      min-height: 38px;
+      transition: all 0.2s ease;
+    }
+    .drop-slot.drag-over {
+      background-color: #fef08a !important;
+      border-color: #f59e0b !important;
+      transform: scale(1.05);
+    }
+
+    /* Instant Feedback Animations */
+    @keyframes popSuccess {
+      0% { transform: scale(0.85); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .pop-success {
+      animation: popSuccess 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes shakeSlot {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .shake-slot {
+      animation: shakeSlot 0.4s ease-in-out;
+    }
+
+    /* Exercise 2 Word Chips (Pastel buttons) */
+    .word-chip {
+      user-select: none;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-weight: 700;
+    }
+    .word-chip:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+    .word-chip:active {
+      transform: scale(0.95);
+    }
+    .word-chip.used {
+      opacity: 0.35;
+      pointer-events: none;
+      filter: grayscale(80%);
+    }
+
+    /* Exercise 2 Target Lined Row */
+    .ruled-line {
+      border-bottom: 2.5px solid #0284c7;
+      min-height: 44px;
+      transition: all 0.2s ease;
+    }
+
+    /* Word Highlight Karaoke Sync */
+    .k-word {
+      display: inline-block;
+      transition: all 0.15s ease;
+      padding: 0 3px;
+      border-radius: 6px;
+    }
+    .k-active {
+      background-color: #fef08a !important;
+      color: #9a3412 !important;
+      font-weight: 900 !important;
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .worksheet-poster { box-shadow: none !important; border-width: 2px !important; }
+    }
+  </style>
+</head>
+<body class="p-2 sm:p-4 md:p-6 lg:p-8 flex justify-center">
+
+  <div class="w-full max-w-4xl flex flex-col items-center">
+
+    <!-- Top Ribbon Control Bar (No Print) -->
+    <div class="no-print w-full flex flex-wrap items-center justify-between gap-3 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-md border border-sky-200 mb-4">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white text-lg font-black shadow-sm">
+          📝
+        </span>
+        <div>
+          <h1 class="text-sm sm:text-base font-black text-slate-800 leading-tight">ورقة عمل تفاعلية • How Many & How Long</h1>
+          <p class="text-[11px] text-amber-700 font-bold">إكمال فراغات بالسحب والإفلات • إعادة ترتيب الجمل • نطق كندي 🇨🇦</p>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Canadian Voice Tester -->
+        <button onclick="canadianSpeaker.testVoice()" class="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 text-xs font-black flex items-center gap-1.5 transition active:scale-95">
+          <span>🇨🇦</span>
+          <span>صوت كندي</span>
+        </button>
+
+        <!-- Toggle Arabic Translation -->
+        <button id="toggleTransBtn" onclick="toggleTranslations()" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 text-xs font-black flex items-center gap-1 transition">
+          <span>🌐</span>
+          <span id="transBtnText">إخفاء الترجمة</span>
+        </button>
+
+        <!-- Reset Button -->
+        <button onclick="resetAllExercises()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black flex items-center gap-1 transition">
+          <span>🔄</span>
+          <span>إعادة حل</span>
+        </button>
+
+        <!-- Live Score Counter -->
+        <div class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-black flex items-center gap-1 shadow-sm">
+          <span>النقاط:</span>
+          <span id="scoreDisplay">0 / 16</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Printable Worksheet Poster -->
+    <main class="worksheet-poster w-full p-4 sm:p-7 md:p-9 relative bg-white overflow-hidden">
+
+      <!-- Corner Notebook & Stars Decorations -->
+      <div class="absolute top-3 left-4 flex items-center gap-2 select-none opacity-85 pointer-events-none">
+        <div class="w-10 h-10 bg-pink-100 border-2 border-pink-300 rounded-lg shadow-xs transform -rotate-12 flex items-center justify-center text-sm font-black text-pink-700">
+          📓
+        </div>
+        <span class="text-2xl text-amber-400">⭐</span>
+      </div>
+
+      <!-- Header: Logo, Name & Date Lines -->
+      <div class="flex items-center justify-between w-full mb-4 relative">
+        <div class="flex items-center gap-2 select-none">
+          <span class="text-3xl">✏️ 📐</span>
+        </div>
+
+        <!-- Glory English Academy Circular Logo -->
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-3 border-sky-500 bg-white shadow-md p-1.5 flex flex-col items-center justify-center text-center">
+            <span class="text-[9px] sm:text-[10px] font-black text-sky-800 uppercase tracking-tighter leading-none">GLORY ENGLISH</span>
+            <div class="text-lg sm:text-2xl leading-none my-0.5">📖🕊️</div>
+            <span class="text-[8px] sm:text-[9px] font-black text-sky-600 uppercase tracking-tighter leading-none">ACADEMY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Practice Worksheet Ribbon Title -->
+      <div class="flex flex-col items-center justify-center text-center mb-6">
+        <div class="ribbon-banner px-8 sm:px-14 py-3 sm:py-3.5 shadow-sm flex flex-col items-center">
+          <h2 class="en-font font-black text-2xl sm:text-3xl md:text-4xl text-rose-600 tracking-wide drop-shadow-2xs">
+            Practice Worksheet
+          </h2>
+        </div>
+        <h3 class="en-font font-black text-xl sm:text-2xl text-slate-800 mt-2 tracking-wide">
+          How Many & How Long
+        </h3>
+        <p class="text-xs sm:text-sm font-bold text-slate-500 mt-1">
+          كم العدد (للأسماء المعدودة والجمع) • كم المدة (للوقت المستغرق) ⏱️🔢
+        </p>
+      </div>
+
+      <!-- =========================================================================
+           EXERCISE 1: READ AND COMPLETE WITH HOW MANY OR HOW LONG (1 TO 10)
+           ========================================================================= -->
+      <section class="ex1-container p-4 sm:p-6 mb-8 relative" id="sectionExercise1">
+        
+        <!-- Header 1 -->
+        <div class="flex flex-col items-center justify-center text-center mb-5 pb-3 border-b-2 border-amber-200">
+          <h3 class="en-font font-black text-lg sm:text-xl text-amber-950 flex items-center justify-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-amber-600 text-white text-sm flex items-center justify-center shrink-0">1</span>
+            <span>Read and complete with how many or how long</span>
+          </h3>
+          <p class="text-xs sm:text-sm font-bold text-amber-800 mt-1 arabic-sub">
+            اقرأ وأكمل الفراغ باختيار أداة الاستفهام المناسبة (how many للعدد أو how long للمدة الزمنية)
+          </p>
+        </div>
+
+        <!-- Word Bank (How many & How long) -->
+        <div class="mb-5 bg-white/90 border-2 border-amber-300 rounded-2xl p-3.5 shadow-sm">
+          <div class="flex items-center justify-between mb-2.5 flex-wrap gap-2">
+            <span class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-1.5">
+              <span>📦</span>
+              <span>صندوق الكلمات (اسحب الأداة أو انقر عليها ثم انقر في الفراغ):</span>
+            </span>
+            <span class="text-[11px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+              🇨🇦 نطق كندي فصيح
+            </span>
+          </div>
+
+          <div id="ex1WordBank" class="flex flex-wrap items-center justify-center gap-4" dir="ltr">
+            <!-- Word Pills Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- 10 Sentences Grid -->
+        <div class="flex flex-col gap-3" dir="ltr" id="ex1SentencesContainer">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Exercise 1 Check Button -->
+        <div class="mt-4 flex justify-center">
+          <button onclick="checkAllEx1Answers()" class="px-6 py-2 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 transition active:scale-95">
+            <span>✅</span>
+            <span>التحقق من إجابات التمرين الأول</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- =========================================================================
+           EXERCISE 2: RE-ORDER THE WORDS TO MAKE QUESTIONS (1 TO 6)
+           ========================================================================= -->
+      <section class="bg-sky-50/70 border-3 border-sky-300 rounded-3xl p-4 sm:p-6 mb-8 relative" id="sectionExercise2">
+        
+        <!-- Header 2 -->
+        <div class="flex flex-col items-center justify-center text-center mb-5 pb-3 border-b-2 border-sky-200">
+          <h3 class="en-font font-black text-lg sm:text-xl text-sky-950 flex items-center justify-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center shrink-0">2</span>
+            <span>Re-order the words to make questions. ✍️</span>
+          </h3>
+          <p class="text-xs sm:text-sm font-bold text-sky-800 mt-1 arabic-sub">
+            أعد ترتيب الكلمات لتكوين أسئلة صحيحة نحوياً (انقر على الكلمات بالترتيب الصحيح)
+          </p>
+        </div>
+
+        <!-- 6 Re-ordering Tasks -->
+        <div class="flex flex-col gap-5" dir="ltr" id="ex2TasksContainer">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Teacher Illustration in bottom-right corner matching image -->
+        <div class="mt-6 pt-4 border-t-2 border-sky-200 flex items-center justify-between flex-wrap gap-4" dir="rtl">
+          <div class="flex items-center gap-3">
+            <div class="w-16 h-16 rounded-full bg-amber-100 border-2 border-amber-400 shadow-sm flex items-center justify-center text-4xl shrink-0">
+              👩‍🏫
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm font-black text-slate-800">
+                المعلمة تذكرك:
+              </p>
+              <p class="text-[11px] sm:text-xs font-bold text-sky-700 leading-tight">
+                "ابدأ السؤال بأداة الاستفهام (How many / How long)، يتبعها الاسم أو الفعل المساعد، ثم الفاعل والفعل، ولا تنس علامة الاستفهام (?)!"
+              </p>
+            </div>
+          </div>
+
+          <button onclick="checkAllEx2Answers()" class="px-6 py-2.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 transition active:scale-95">
+            <span>✅</span>
+            <span>فحص جميع الأسئلة المرتبة</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Worksheet Footer -->
+      <footer class="pt-4 border-t-2 border-slate-100 flex items-center justify-between relative px-2 sm:px-4">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-full border-2 border-sky-400 bg-sky-50 flex items-center justify-center text-lg">
+            📖
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[11px] font-black text-sky-900 leading-tight">Glory English Academy</span>
+            <span class="text-[9px] font-bold text-slate-400">Grammar Mastery Series • How many & How long</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-2xl select-none opacity-80">
+          <span>✏️ 🎒 📐 🌟</span>
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- Bottom Print Ribbon -->
+    <div class="no-print w-full mt-4 flex items-center justify-center gap-3 flex-wrap">
+      <button onclick="window.print()" class="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-300 text-slate-700 font-bold text-sm shadow-sm flex items-center gap-2 transition">
+        <span>🖨️</span>
+        <span>طباعة ورقة العمل</span>
+      </button>
+      <button onclick="resetAllExercises()" class="px-5 py-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-black text-sm shadow-sm flex items-center gap-2 transition">
+        <span>🔄</span>
+        <span>إعادة تعيين الكل</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Instant Feedback Modal Toast -->
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 transform translate-y-28 opacity-0">
+    <div class="bg-slate-900 text-white px-6 py-3.5 rounded-2xl shadow-2xl border-2 border-sky-400 flex items-center gap-3 backdrop-blur-md">
+      <span id="toastIcon" class="text-2xl">✨</span>
+      <div>
+        <p id="toastTitle" class="text-base font-black text-white"></p>
+        <p id="toastMsg" class="text-xs text-slate-200 font-medium"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. WEB AUDIO SYNTHESIZER (CHIMES & BUZZERS)
+       ========================================================================= */
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playSuccess() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.2, now + idx * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.28);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.3);
+        });
+      }
+      playError() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = [280, 220];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+          gain.gain.setValueAtTime(0.15, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.22);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.24);
+        });
+      }
+      playPop() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.frequency.setValueAtTime(450, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.06);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+    }
+    const sfx = new SoundFX();
+
+    /* =========================================================================
+       2. CANADIAN SPEAKER & ARABIC FEEDBACK SYNTHESIZER
+       ========================================================================= */
+    class CanadianSpeaker {
+      constructor() {
+        this.synth = window.speechSynthesis;
+        this.voice = null;
+        this.initVoice();
+        if (this.synth && this.synth.onvoiceschanged !== undefined) {
+          this.synth.onvoiceschanged = () => this.initVoice();
+        }
+      }
+      initVoice() {
+        if (!this.synth) return;
+        const voices = this.synth.getVoices();
+        this.voice = voices.find(v => v.lang === 'en-CA' || v.lang.includes('CA') || (v.lang.startsWith('en') && v.name.toLowerCase().includes('canada')))
+          || voices.find(v => v.lang.startsWith('en') && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('zira')))
+          || voices.find(v => v.lang.startsWith('en'))
+          || null;
+      }
+      speak(text, onEndCallback = null, onBoundaryCallback = null) {
+        if (!this.synth) { if (onEndCallback) onEndCallback(); return; }
+        this.synth.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        if (this.voice) utter.voice = this.voice;
+        utter.lang = 'en-CA';
+        utter.rate = 0.88;
+        utter.pitch = 1.05;
+        utter.volume = 1.0;
+
+        if (onBoundaryCallback) {
+          utter.onboundary = (e) => onBoundaryCallback(e);
+        }
+        if (onEndCallback) {
+          utter.onend = () => onEndCallback();
+          utter.onerror = () => onEndCallback();
+        }
+        this.synth.speak(utter);
+      }
+      testVoice() {
+        sfx.playPop();
+        this.speak("Hello! Welcome to Glory English Academy. Let's practice How many and How long!");
+        showFeedbackToast(true, "تم تفعيل الصوت الكندي الإنجليزي بنقاء ووضوح 🇨🇦");
+      }
+    }
+    const canadianSpeaker = new CanadianSpeaker();
+
+    // Arabic vocal feedback: "الإجابة صحيحة" / "إجابة خاطئة"
+    function speakArabicFeedback(isCorrect, callback = null) {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const phrase = isCorrect ? "الإجابة صحيحة" : "إجابة خاطئة";
+          const utter = new SpeechSynthesisUtterance(phrase);
+          utter.lang = 'ar-SA';
+          utter.rate = 0.95;
+          utter.pitch = 1.05;
+          utter.volume = 1.0;
+          const voices = window.speechSynthesis.getVoices();
+          const arVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('AR')));
+          if (arVoice) utter.voice = arVoice;
+          if (callback) {
+            utter.onend = () => callback();
+            utter.onerror = () => callback();
+          }
+          window.speechSynthesis.speak(utter);
+        } else if (callback) {
+          callback();
+        }
+      } catch (err) {
+        if (callback) callback();
+      }
+    }
+
+    function showFeedbackToast(isCorrect, message) {
+      const toast = document.getElementById('toastNotification');
+      if (!toast) return;
+      const inner = toast.querySelector('div');
+      const title = document.getElementById('toastTitle');
+      const msg = document.getElementById('toastMsg');
+      const icon = document.getElementById('toastIcon');
+
+      if (isCorrect) {
+        inner.className = "bg-emerald-600 text-white px-6 py-3.5 rounded-2xl shadow-2xl border-2 border-emerald-300 flex items-center gap-3 backdrop-blur-md transform scale-105 transition duration-200";
+        icon.textContent = "✅";
+        title.textContent = "الإجابة صحيحة";
+        msg.textContent = message || "أحسنت! إجابة ممتازة ومطابقة للقاعدة.";
+      } else {
+        inner.className = "bg-rose-600 text-white px-6 py-3.5 rounded-2xl shadow-2xl border-2 border-rose-300 flex items-center gap-3 backdrop-blur-md transform scale-105 transition duration-200";
+        icon.textContent = "❌";
+        title.textContent = "إجابة خاطئة";
+        msg.textContent = message || "حاول مرة أخرى!";
+      }
+
+      toast.classList.remove('translate-y-28', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-28', 'opacity-0');
+      }, 2500);
+    }
+
+    /* =========================================================================
+       3. EXERCISE 1 DATA & LOGIC (1 TO 10)
+       ========================================================================= */
+    const EX1_DATA = [
+      { id: 1, correct: "how many", rest: "books do you usually read every day?", icon: "📚", arabic: "كم كتاباً تقرأ عادةً كل يوم؟ (سؤال عن عدد/اسم جمع)", numBg: "bg-teal-400" },
+      { id: 2, correct: "how long", rest: "is your English class today?", icon: "⏰", arabic: "كم مدة حصة اللغة الإنجليزية اليوم؟ (مدة زمنية)", numBg: "bg-rose-400" },
+      { id: 3, correct: "how many", rest: "teachers are there in your school?", icon: "🏫", arabic: "كم عدد المعلمين في مدرستك؟ (سؤال عن عدد)", numBg: "bg-sky-400" },
+      { id: 4, correct: "how many", rest: "subjects are you studying this year?", icon: "📓", arabic: "كم مادة دراسية تدرس هذا العام؟ (اسم جمع)", numBg: "bg-pink-400" },
+      { id: 5, correct: "how long", rest: "do you usually study at home every evening?", icon: "✍️", arabic: "كم المدة التي تدرسها في المنزل كل مساء عادةً؟ (مدة زمنية)", numBg: "bg-blue-400" },
+      { id: 6, correct: "how many", rest: "questions are there in your English exam?", icon: "📝", arabic: "كم عدد الأسئلة في اختبار اللغة الإنجليزية؟ (سؤال عن عدد)", numBg: "bg-emerald-400" },
+      { id: 7, correct: "how long", rest: "does the break time last?", icon: "⌛", arabic: "كم تستغرق مدة وقت الاستراحة (الفسحة)؟ (مدة زمنية)", numBg: "bg-amber-400" },
+      { id: 8, correct: "how long", rest: "is your journey to school?", icon: "🚌", arabic: "كم مدة رحلتك إلى المدرسة؟ (مدة زمنية)", numBg: "bg-cyan-400" },
+      { id: 9, correct: "how many", rest: "students are in your class?", icon: "👫", arabic: "كم عدد الطلاب في فصلك الدراسي؟ (سؤال عن عدد)", numBg: "bg-indigo-400" },
+      { id: 10, correct: "how many", rest: "computers are there in the computer lab?", icon: "💻", arabic: "كم عدد أجهزة الكمبيوتر في معمل الحاسب؟ (سؤال عن عدد)", numBg: "bg-orange-400" }
+    ];
+
+    const ex1SlotsState = {};
+    EX1_DATA.forEach(d => ex1SlotsState[d.id] = null);
+    let selectedEx1Word = null;
+
+    function renderEx1WordBank() {
+      const bank = document.getElementById('ex1WordBank');
+      bank.innerHTML = '';
+
+      const pills = [
+        { text: "how many", desc: "كم العدد (اسم جمع 🔢)", color: "border-sky-400 bg-sky-50 text-sky-950" },
+        { text: "how long", desc: "كم المدة (مدة زمنية ⏱️)", color: "border-amber-400 bg-amber-50 text-amber-950" }
+      ];
+
+      pills.forEach(p => {
+        const pill = document.createElement('div');
+        pill.id = `pill-ex1-${p.text.replace(/\s+/g, '-')}`;
+        pill.className = `word-pill px-5 py-2.5 rounded-2xl border-3 ${p.color} font-black en-font text-base sm:text-lg shadow-sm hover:scale-105 transition flex items-center gap-2 cursor-pointer`;
+        pill.setAttribute('draggable', 'true');
+        pill.innerHTML = `<span>${p.text}</span> <span class="text-xs font-sans text-slate-500">(${p.desc})</span>`;
+
+        pill.onclick = () => {
+          sfx.playPop();
+          canadianSpeaker.speak(p.text);
+          selectEx1Pill(p.text, pill);
+        };
+
+        pill.ondragstart = (e) => {
+          e.dataTransfer.setData("text/plain", p.text);
+          selectedEx1Word = p.text;
+          sfx.playPop();
+        };
+
+        bank.appendChild(pill);
+      });
+    }
+
+    function selectEx1Pill(word, el) {
+      if (selectedEx1Word === word) {
+        selectedEx1Word = null;
+        el.classList.remove('selected-pill');
+      } else {
+        document.querySelectorAll('#ex1WordBank .word-pill').forEach(p => p.classList.remove('selected-pill'));
+        selectedEx1Word = word;
+        el.classList.add('selected-pill');
+        showFeedbackToast(true, `تم اختيار (${word}). انقر الآن في الفراغ المناسب.`);
+      }
+    }
+
+    function renderEx1Sentences() {
+      const container = document.getElementById('ex1SentencesContainer');
+      container.innerHTML = '';
+
+      EX1_DATA.forEach(item => {
+        const row = document.createElement('div');
+        row.id = `ex1-row-${item.id}`;
+        row.className = "bg-white border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-3 shadow-2xs transition flex flex-col justify-between";
+
+        const val = ex1SlotsState[item.id];
+        let slotHtml = '';
+
+        if (val) {
+          const isCorrect = (val.toLowerCase() === item.correct.toLowerCase());
+          if (isCorrect) {
+            slotHtml = `
+              <span onclick="clearEx1Slot(${item.id})" class="cursor-pointer inline-flex items-center gap-1 bg-emerald-100 border-2 border-emerald-500 text-emerald-950 px-3 py-1 rounded-xl font-black en-font text-sm sm:text-base hover:bg-rose-100 transition shadow-2xs" title="انقر للإزالة">
+                ${val} <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-md">✓</span>
+              </span>
+            `;
+          } else {
+            slotHtml = `
+              <span onclick="clearEx1Slot(${item.id})" class="cursor-pointer inline-flex items-center gap-1 bg-rose-100 border-2 border-rose-400 text-rose-950 px-3 py-1 rounded-xl font-black en-font text-sm sm:text-base line-through hover:bg-rose-200 transition shadow-2xs" title="انقر للتصحيح">
+                ${val} <span class="text-[10px] bg-rose-600 text-white px-1.5 py-0.5 rounded-md">✗</span>
+              </span>
+            `;
+          }
+        } else {
+          slotHtml = `
+            <span onclick="handleEx1SlotClick(${item.id})" ondragover="event.preventDefault(); this.classList.add('drag-over');" ondragleave="this.classList.remove('drag-over');" ondrop="handleEx1Drop(event, ${item.id})" class="drop-slot inline-block border-2 border-dashed border-amber-400 bg-amber-50/60 hover:bg-amber-100 px-4 py-1 rounded-xl text-amber-800 text-xs sm:text-sm font-bold cursor-pointer transition">
+              [ ..... ؟ ..... ]
+            </span>
+          `;
+        }
+
+        row.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="w-6 h-6 rounded-full ${item.numBg} text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                ${item.id}
+              </span>
+              <span class="en-font font-black text-slate-800 text-sm sm:text-base">${item.id}.</span>
+              ${slotHtml}
+              <span class="en-font font-bold text-slate-800 text-sm sm:text-base leading-snug">
+                ${item.rest}
+              </span>
+              <span class="text-xl shrink-0 select-none">${item.icon}</span>
+            </div>
+            <p class="text-[11px] font-bold text-slate-500 mt-1 pt-1 border-t border-slate-100 arabic-sub" dir="rtl">
+              ${item.arabic}
+            </p>
+          </div>
+          <div class="mt-1 flex justify-end">
+            <button onclick="speakEx1FullSentence(${item.id})" class="text-xs text-amber-700 hover:text-amber-900 p-1 rounded-md transition flex items-center gap-1" title="استمع للسؤال كاملاً">
+              <span>🔊</span>
+              <span>استمع</span>
+            </button>
+          </div>
+        `;
+
+        container.appendChild(row);
+      });
+    }
+
+    function handleEx1Drop(e, slotId) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const word = e.dataTransfer.getData("text/plain") || selectedEx1Word;
+      if (word) placeEx1Word(slotId, word);
+    }
+
+    function handleEx1SlotClick(slotId) {
+      if (selectedEx1Word) {
+        placeEx1Word(slotId, selectedEx1Word);
+      } else {
+        sfx.playPop();
+        showFeedbackToast(false, "اختر (how many) أو (how long) من صندوق الكلمات أولاً ثم انقر في الفراغ");
+      }
+    }
+
+    function clearEx1Slot(slotId) {
+      sfx.playPop();
+      ex1SlotsState[slotId] = null;
+      renderEx1Sentences();
+      updateScoreBadge();
+    }
+
+    function placeEx1Word(slotId, word) {
+      const item = EX1_DATA.find(i => i.id === slotId);
+      const isCorrect = (word.toLowerCase() === item.correct.toLowerCase());
+
+      ex1SlotsState[slotId] = word;
+      renderEx1Sentences();
+      updateScoreBadge();
+
+      const card = document.getElementById(`ex1-row-${slotId}`);
+
+      if (isCorrect) {
+        sfx.playSuccess();
+        speakArabicFeedback(true, () => {
+          canadianSpeaker.speak(`${word} ${item.rest}`);
+        });
+        if (card) {
+          card.classList.remove('shake-slot');
+          card.classList.add('pop-success');
+        }
+        showFeedbackToast(true, `ممتاز! (${word}) هي الأداة الصحيحة. ${item.arabic}`);
+        fireConfetti(0.35);
+      } else {
+        sfx.playError();
+        speakArabicFeedback(false);
+        if (card) {
+          card.classList.remove('pop-success');
+          card.classList.add('shake-slot');
+        }
+        showFeedbackToast(false, `إجابة خاطئة! (${word}) غير مناسبة هنا. راجع القاعدة وانقر للتصحيح.`);
+      }
+    }
+
+    function speakEx1FullSentence(slotId) {
+      const item = EX1_DATA.find(i => i.id === slotId);
+      const val = ex1SlotsState[slotId] || item.correct;
+      const text = `${val} ${item.rest}`;
+      canadianSpeaker.speak(text);
+    }
+
+    function checkAllEx1Answers() {
+      sfx.playPop();
+      let score = 0;
+      EX1_DATA.forEach(i => {
+        if (ex1SlotsState[i.id] && ex1SlotsState[i.id].toLowerCase() === i.correct.toLowerCase()) {
+          score++;
+        }
+      });
+
+      if (score === 10) {
+        sfx.playSuccess();
+        speakArabicFeedback(true);
+        showFeedbackToast(true, "ما شاء الله! جميع إجابات التمرين الأول صحيحة ومكتملة 10 من 10 🌟");
+        fireConfetti(1.0);
+      } else {
+        sfx.playError();
+        speakArabicFeedback(false);
+        showFeedbackToast(false, `لديك ${score} إجابات صحيحة من أصل 10. أكمل باقي الفراغات!`);
+      }
+    }
+
+    /* =========================================================================
+       4. EXERCISE 2 DATA & LOGIC: RE-ORDER WORDS TO MAKE QUESTIONS (1 TO 6)
+       ========================================================================= */
+    const EX2_DATA = [
+      {
+        id: 1,
+        scrambled: ["books", "you", "every month", "do", "read", "how many", "?"],
+        correct: ["how many", "books", "do", "you", "read", "every month", "?"],
+        arabic: "كم كتاباً تقرأ كل شهر؟",
+        chipColors: [
+          "bg-teal-100 border-teal-300 text-teal-950",
+          "bg-amber-100 border-amber-300 text-amber-950",
+          "bg-emerald-100 border-emerald-300 text-emerald-950",
+          "bg-rose-100 border-rose-300 text-rose-950",
+          "bg-sky-100 border-sky-300 text-sky-950",
+          "bg-purple-100 border-purple-300 text-purple-950",
+          "bg-cyan-100 border-cyan-300 text-cyan-950"
+        ]
+      },
+      {
+        id: 2,
+        scrambled: ["your", "how long", "English class", "is", "?"],
+        correct: ["how long", "is", "your", "English class", "?"],
+        arabic: "كم مدة حصة اللغة الإنجليزية الخاصة بك؟",
+        chipColors: [
+          "bg-sky-100 border-sky-300 text-sky-950",
+          "bg-orange-100 border-orange-300 text-orange-950",
+          "bg-purple-100 border-purple-300 text-purple-950",
+          "bg-amber-100 border-amber-300 text-amber-950",
+          "bg-rose-100 border-rose-300 text-rose-950"
+        ]
+      },
+      {
+        id: 3,
+        scrambled: ["how many", "teachers", "you", "have", "do", "?"],
+        correct: ["how many", "teachers", "do", "you", "have", "?"],
+        arabic: "كم معلماً لديك؟",
+        chipColors: [
+          "bg-blue-100 border-blue-300 text-blue-950",
+          "bg-emerald-100 border-emerald-300 text-emerald-950",
+          "bg-amber-100 border-amber-300 text-amber-950",
+          "bg-teal-100 border-teal-300 text-teal-950",
+          "bg-rose-100 border-rose-300 text-rose-950",
+          "bg-cyan-100 border-cyan-300 text-cyan-950"
+        ]
+      },
+      {
+        id: 4,
+        scrambled: ["is", "how long", "lunch break", "your", "?"],
+        correct: ["how long", "is", "your", "lunch break", "?"],
+        arabic: "كم مدة استراحة الغداء لديك؟",
+        chipColors: [
+          "bg-teal-100 border-teal-300 text-teal-950",
+          "bg-orange-100 border-orange-300 text-orange-950",
+          "bg-emerald-100 border-emerald-300 text-emerald-950",
+          "bg-sky-100 border-sky-300 text-sky-950",
+          "bg-rose-100 border-rose-300 text-rose-950"
+        ]
+      },
+      {
+        id: 5,
+        scrambled: ["how many", "pens", "are", "there", "your bag", "in", "?"],
+        correct: ["how many", "pens", "are", "there", "in", "your bag", "?"],
+        arabic: "كم قلماً يوجد في حقيبتك؟",
+        chipColors: [
+          "bg-blue-100 border-blue-300 text-blue-950",
+          "bg-rose-100 border-rose-300 text-rose-950",
+          "bg-amber-100 border-amber-300 text-amber-950",
+          "bg-teal-100 border-teal-300 text-teal-950",
+          "bg-emerald-100 border-emerald-300 text-emerald-950",
+          "bg-purple-100 border-purple-300 text-purple-950",
+          "bg-cyan-100 border-cyan-300 text-cyan-950"
+        ]
+      },
+      {
+        id: 6,
+        scrambled: ["subjects", "you", "how many", "study", "do", "?"],
+        correct: ["how many", "subjects", "do", "you", "study", "?"],
+        arabic: "كم مادة تدرس؟",
+        chipColors: [
+          "bg-pink-100 border-pink-300 text-pink-950",
+          "bg-sky-100 border-sky-300 text-sky-950",
+          "bg-orange-100 border-orange-300 text-orange-950",
+          "bg-teal-100 border-teal-300 text-teal-950",
+          "bg-rose-100 border-rose-300 text-rose-950",
+          "bg-amber-100 border-amber-300 text-amber-950"
+        ]
+      }
+    ];
+
+    const ex2UserState = {};
+    EX2_DATA.forEach(d => {
+      ex2UserState[d.id] = {
+        placed: [],
+        available: [...d.scrambled],
+        isCorrect: false
+      };
+    });
+
+    function renderEx2Tasks() {
+      const container = document.getElementById('ex2TasksContainer');
+      container.innerHTML = '';
+
+      EX2_DATA.forEach(task => {
+        const state = ex2UserState[task.id];
+        const card = document.createElement('div');
+        card.id = `ex2-card-${task.id}`;
+        card.className = "bg-white border-2 border-sky-200 rounded-2xl p-4 shadow-2xs flex flex-col gap-3";
+
+        // Scrambled Chips Bank
+        let chipsHtml = state.available.map((chip, idx) => {
+          const colorClass = task.chipColors[idx % task.chipColors.length];
+          return `
+            <button onclick="pickEx2Chip(${task.id}, '${chip.replace(/'/g, "\\'")}')" class="word-chip px-3 py-1.5 rounded-xl border-2 ${colorClass} text-xs sm:text-sm en-font shadow-2xs">
+              ${chip}
+            </button>
+          `;
+        }).join('');
+
+        if (state.available.length === 0 && !state.isCorrect) {
+          chipsHtml = `<span class="text-xs text-slate-400 italic">تم وضع جميع الكلمات في السطر أدناه</span>`;
+        }
+
+        // Ruled Line for Placed Words
+        let placedHtml = state.placed.map((chip, pIdx) => {
+          return `
+            <span onclick="unpickEx2Chip(${task.id}, ${pIdx})" class="cursor-pointer word-chip inline-flex items-center gap-1 bg-sky-100 border-2 border-sky-400 text-sky-950 px-3 py-1 rounded-xl text-xs sm:text-sm font-black en-font hover:bg-rose-100 hover:border-rose-400 transition" title="انقر لإعادة الكلمة">
+              ${chip}
+            </span>
+          `;
+        }).join(' ');
+
+        if (state.placed.length === 0) {
+          placedHtml = `<span class="text-xs font-bold text-slate-400 pointer-events-none">[ انقر على الكلمات بالأعلى لترتيبها هنا على السطر بالترتيب الصحيح ]</span>`;
+        }
+
+        // Validation Badge
+        let statusBadge = '';
+        if (state.placed.length === task.correct.length) {
+          if (state.isCorrect) {
+            statusBadge = `<span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-lg font-black">✓ مرتب بنجاح</span>`;
+          } else {
+            statusBadge = `<span class="bg-rose-600 text-white text-xs px-2.5 py-1 rounded-lg font-black">✗ ترتيب غير صحيح</span>`;
+          }
+        }
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-sky-700 text-white font-black text-xs flex items-center justify-center shrink-0">
+                  ${task.id}
+                </span>
+                <span class="text-xs font-black text-slate-700">الكلمات المتاحة للترتيب:</span>
+              </div>
+              <div class="flex items-center gap-2">
+                ${statusBadge}
+                <button onclick="resetEx2Task(${task.id})" class="text-xs text-slate-400 hover:text-slate-600 underline">
+                  إعادة ترتيب
+                </button>
+              </div>
+            </div>
+
+            <!-- Available Chips Row -->
+            <div class="flex items-center flex-wrap gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl mb-3 min-h-[44px]">
+              ${chipsHtml}
+            </div>
+
+            <!-- Target Ruled Line with Pen Icon -->
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg select-none">✍️</span>
+              <div class="ruled-line flex-1 flex items-center flex-wrap gap-2 pb-1">
+                ${placedHtml}
+              </div>
+            </div>
+
+            <p class="text-[11px] font-bold text-slate-500 mt-2 pt-1 border-t border-slate-100 arabic-sub" dir="rtl">
+              ${task.arabic}
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-2">
+            <button onclick="speakEx2Question(${task.id})" class="text-xs text-sky-600 hover:text-sky-800 p-1 rounded-md transition flex items-center gap-1" title="استمع للسؤال مرتباً">
+              <span>🔊</span>
+              <span>استمع للسؤال</span>
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function pickEx2Chip(taskId, chip) {
+      sfx.playPop();
+      const state = ex2UserState[taskId];
+      const task = EX2_DATA.find(t => t.id === taskId);
+
+      const foundIdx = state.available.indexOf(chip);
+      if (foundIdx > -1) {
+        state.available.splice(foundIdx, 1);
+        state.placed.push(chip);
+      }
+
+      checkEx2Task(taskId);
+      renderEx2Tasks();
+      updateScoreBadge();
+    }
+
+    function unpickEx2Chip(taskId, placedIndex) {
+      sfx.playPop();
+      const state = ex2UserState[taskId];
+      const removedChip = state.placed.splice(placedIndex, 1)[0];
+      state.available.push(removedChip);
+
+      state.isCorrect = false;
+      renderEx2Tasks();
+      updateScoreBadge();
+    }
+
+    function resetEx2Task(taskId) {
+      sfx.playPop();
+      const task = EX2_DATA.find(t => t.id === taskId);
+      ex2UserState[taskId] = {
+        placed: [],
+        available: [...task.scrambled],
+        isCorrect: false
+      };
+      renderEx2Tasks();
+      updateScoreBadge();
+    }
+
+    function checkEx2Task(taskId) {
+      const state = ex2UserState[taskId];
+      const task = EX2_DATA.find(t => t.id === taskId);
+
+      if (state.placed.length === task.correct.length) {
+        const userJoined = state.placed.join(' ').toLowerCase();
+        const correctJoined = task.correct.join(' ').toLowerCase();
+
+        if (userJoined === correctJoined) {
+          state.isCorrect = true;
+          sfx.playSuccess();
+          speakArabicFeedback(true, () => {
+            const fullQuestion = formatQuestionText(task.correct);
+            canadianSpeaker.speak(fullQuestion);
+          });
+          showFeedbackToast(true, `أحسنت! رتبت السؤال بالصيغة الصحيحة: ${formatQuestionText(task.correct)}`);
+          fireConfetti(0.4);
+        } else {
+          state.isCorrect = false;
+          sfx.playError();
+          speakArabicFeedback(false);
+          showFeedbackToast(false, "الترتيب غير صحيح! تذكر البدء بأداة الاستفهام ثم الاسم أو الفعل المساعد.");
+        }
+      }
+    }
+
+    function formatQuestionText(wordsArray) {
+      let q = wordsArray.join(' ');
+      q = q.replace(/\s+\?/, '?');
+      return q.charAt(0).toUpperCase() + q.slice(1);
+    }
+
+    function speakEx2Question(taskId) {
+      const state = ex2UserState[taskId];
+      const task = EX2_DATA.find(t => t.id === taskId);
+      const textToSpeak = state.isCorrect ? formatQuestionText(task.correct) : formatQuestionText(task.correct);
+      canadianSpeaker.speak(textToSpeak);
+    }
+
+    function checkAllEx2Answers() {
+      sfx.playPop();
+      let correctCount = 0;
+      EX2_DATA.forEach(t => {
+        if (ex2UserState[t.id].isCorrect) correctCount++;
+      });
+
+      if (correctCount === 6) {
+        sfx.playSuccess();
+        speakArabicFeedback(true);
+        showFeedbackToast(true, "تهانينا! قمت بترتيب جميع الأسئلة الستة بنجاح 6 من 6 🌟");
+        fireConfetti(1.0);
+      } else {
+        sfx.playError();
+        speakArabicFeedback(false);
+        showFeedbackToast(false, `لديك ${correctCount} أسئلة مرتبة بشكل صحيح من أصل 6. تابع المحاولة!`);
+      }
+    }
+
+    /* =========================================================================
+       5. SCORE, TRANSLATION TOGGLE & RESET
+       ========================================================================= */
+    function updateScoreBadge() {
+      let score = 0;
+
+      // Exercise 1 score (max 10)
+      EX1_DATA.forEach(i => {
+        if (ex1SlotsState[i.id] && ex1SlotsState[i.id].toLowerCase() === i.correct.toLowerCase()) {
+          score++;
+        }
+      });
+
+      // Exercise 2 score (max 6)
+      EX2_DATA.forEach(t => {
+        if (ex2UserState[t.id].isCorrect) {
+          score++;
+        }
+      });
+
+      document.getElementById('scoreDisplay').textContent = `${score} / 16`;
+
+      if (score === 16) {
+        fireConfetti(1.2);
+        showFeedbackToast(true, "ما شاء الله! حققت الدرجة الكاملة في ورقة العمل 16 من 16 🏆");
+      }
+    }
+
+    function resetAllExercises() {
+      sfx.playPop();
+      // Reset Ex 1
+      EX1_DATA.forEach(d => ex1SlotsState[d.id] = null);
+      selectedEx1Word = null;
+      renderEx1WordBank();
+      renderEx1Sentences();
+
+      // Reset Ex 2
+      EX2_DATA.forEach(d => {
+        ex2UserState[d.id] = {
+          placed: [],
+          available: [...d.scrambled],
+          isCorrect: false
+        };
+      });
+      renderEx2Tasks();
+
+      updateScoreBadge();
+      showFeedbackToast(true, "تمت إعادة تعيين جميع التمارين بنجاح 🔄");
+    }
+
+    let translationsVisible = true;
+    function toggleTranslations() {
+      translationsVisible = !translationsVisible;
+      document.querySelectorAll('.arabic-sub').forEach(el => {
+        el.style.display = translationsVisible ? 'block' : 'none';
+      });
+      document.getElementById('transBtnText').textContent = translationsVisible ? "إخفاء الترجمة" : "إظهار الترجمة";
+    }
+
+    function fireConfetti(power = 0.5) {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: Math.floor(70 * power),
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    /* =========================================================================
+       INITIALIZATION ON LOAD
+       ========================================================================= */
+    window.onload = function() {
+      renderEx1WordBank();
+      renderEx1Sentences();
+      renderEx2Tasks();
+      updateScoreBadge();
+    };
+  </script>
+</body>
+</html>
